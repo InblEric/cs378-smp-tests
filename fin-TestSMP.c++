@@ -94,31 +94,190 @@ struct TestSMP : CppUnit::TestFixture {
 		delete [] men[1];
 		delete [] men;}
 
+
+	// ------
+	// invert
+	// ------
+	void test_invert_1 () {
+		// declare variables
+		int n = 2;
+		int** src = new int*[n];
+		src[0] = new int[n];
+		src[1] = new int[n];
+		int** dest = new int*[n];
+		dest[0] = new int[n];
+		dest[1] = new int[n];
+		// set src values
+		src[0][0] = 1;
+		src[0][1] = 2;
+		src[1][0] = 2;
+		src[1][1] = 1;
+		smp_invert(n,src,dest);
+		// test dest values
+		assert(dest[0][0] == 1);
+		assert(dest[0][1] == 2);
+		assert(dest[1][0] == 2);
+		assert(dest[1][1] == 1);
+		// clean up
+		delete [] src[0];
+		delete [] src[1];
+		delete [] src;
+		delete [] dest[0];
+		delete [] dest[1];
+		delete [] dest;
+	}
+
+	void test_invert_2 () {
+		// declare variables
+		int n = 3;
+		int** src = new int*[n];
+		src[0] = new int[n];
+		src[1] = new int[n];
+		src[2] = new int[n];
+		int** dest = new int*[n];
+		dest[0] = new int[n];
+		dest[1] = new int[n];
+		dest[2] = new int[n];
+		// set src values
+		src[0][0] = 1;
+		src[0][1] = 2;
+		src[0][2] = 3;
+		src[1][0] = 3;
+		src[1][1] = 1;
+		src[1][2] = 2;
+		src[2][0] = 2;
+		src[2][1] = 1;
+		src[2][2] = 3;
+		smp_invert(n,src,dest);
+		// test dest values
+		assert(dest[0][0] == 1);
+		assert(dest[0][1] == 2);
+		assert(dest[0][2] == 3);
+		assert(dest[1][0] == 2);
+		assert(dest[1][1] == 3);
+		assert(dest[1][2] == 1);
+		assert(dest[2][0] == 2);
+		assert(dest[2][1] == 1);
+		assert(dest[2][2] == 3);
+		// clean up
+		delete [] src[0];
+		delete [] src[1];
+		delete [] src[2];
+		delete [] src;
+		delete [] dest[0];
+		delete [] dest[1];
+		delete [] dest[2];
+		delete [] dest;
+	}
+
+	void test_invert_3 () {
+		// declare variables
+		int n = 3;
+		int** src = new int*[n];
+		src[0] = new int[n];
+		src[1] = new int[n];
+		src[2] = new int[n];
+		int** dest = new int*[n];
+		dest[0] = new int[n];
+		dest[1] = new int[n];
+		dest[2] = new int[n];
+		// set src values
+		src[0][0] = 1;
+		src[0][1] = 3;
+		src[0][2] = 2;
+		src[1][0] = 2;
+		src[1][1] = 3;
+		src[1][2] = 1;
+		src[2][0] = 3;
+		src[2][1] = 1;
+		src[2][2] = 2;
+		smp_invert(n,src,dest);
+		// test dest values
+		assert(dest[0][0] == 1);
+		assert(dest[0][1] == 3);
+		assert(dest[0][2] == 2);
+		assert(dest[1][0] == 3);
+		assert(dest[1][1] == 1);
+		assert(dest[1][2] == 2);
+		assert(dest[2][0] == 2);
+		assert(dest[2][1] == 3);
+		assert(dest[2][2] == 1);
+		// clean up
+		delete [] src[0];
+		delete [] src[1];
+		delete [] src[2];
+		delete [] src;
+		delete [] dest[0];
+		delete [] dest[1];
+		delete [] dest[2];
+		delete [] dest;
+	}
+
+	// ---------------
+	// prefer_constant
+	// ---------------
+	void test_prefer_constant_true () {
+		// declare variables
+		int n = 2;
+		int m_old = 1;
+		int m_new = 2;
+		int * prefs = new int[n];
+		prefs[0] = 2;
+		prefs[1] = 1;
+		assert(smp_prefer_constant(n,m_old,m_new,prefs));
+		delete [] prefs;
+	}
+
+	void test_prefer_constant_false () {
+		// declare variables
+		int n = 2;
+		int m_old = 1;
+		int m_new = 2;
+		int * prefs = new int[n];
+		prefs[0] = 1;
+		prefs[1] = 2;
+		assert(!smp_prefer_constant(n,m_old,m_new,prefs));
+		delete [] prefs;
+	}
+
+	void test_prefer_constant () {
+		// declare variables
+		int n = 3;
+		int m_old = 1;
+		int m_new = 2;
+		int * prefs = new int[n];
+		prefs[0] = 3;
+		prefs[1] = 1;
+		prefs[2] = 2;
+		assert(smp_prefer_constant(n,m_old,m_new,prefs));
+		delete [] prefs;
+	}
+
 	// ------
 	// prefer
 	// ------
-	void test_prefer_true () {
+	void test_prefer_linear_true () {
 		int n = 2;
 		int m_old = 1;
 		int m_new = 2;
 		int prefs[2] = {2,1};
-		assert(smp_prefer(n,m_old,m_new,prefs));
+		assert(smp_prefer_linear(n,m_old,m_new,prefs));
 	}
 
-	void test_prefer_false () {
+	void test_prefer_linear_false () {
 		int n = 2;
 		int m_old = 1;
 		int m_new = 2;
 		int prefs[2] = {1,2};
-		assert(!smp_prefer(n,m_old,m_new,prefs));
+		assert(!smp_prefer_linear(n,m_old,m_new,prefs));
 	}
 
-	void test_prefer () {
+	void test_prefer_linear () {
 		int n = 3;
 		int m_old = 1;
 		int m_new = 2;
 		int prefs[3] = {3,1,2};
-		assert(!smp_prefer(n,m_old,m_new,prefs));
+		assert(!smp_prefer_linear(n,m_old,m_new,prefs));
 	}
 
 	// ----
@@ -323,9 +482,15 @@ struct TestSMP : CppUnit::TestFixture {
 	CPPUNIT_TEST(test_read_women);
 	CPPUNIT_TEST(test_read_men);
 	CPPUNIT_TEST(test_read);
-	CPPUNIT_TEST(test_prefer_true);
-	CPPUNIT_TEST(test_prefer_false);
-	CPPUNIT_TEST(test_prefer);
+	CPPUNIT_TEST(test_invert_1);
+	CPPUNIT_TEST(test_invert_2);
+	CPPUNIT_TEST(test_invert_3);
+	CPPUNIT_TEST(test_prefer_constant_true);
+	CPPUNIT_TEST(test_prefer_constant_false);
+	CPPUNIT_TEST(test_prefer_constant);
+	CPPUNIT_TEST(test_prefer_linear_true);
+	CPPUNIT_TEST(test_prefer_linear_false);
+	CPPUNIT_TEST(test_prefer_linear);
 	CPPUNIT_TEST(test_eval_1);
 	CPPUNIT_TEST(test_eval_2);
 	CPPUNIT_TEST(test_eval_3);
@@ -339,8 +504,8 @@ struct TestSMP : CppUnit::TestFixture {
 	CPPUNIT_TEST(test_solve_5);
 	CPPUNIT_TEST(test_solve_6);
 	CPPUNIT_TEST(test_solve_sphere_1);
-	CPPUNIT_TEST(test_solve_sphere_2); // fails assertion
-	CPPUNIT_TEST(test_solve_sphere_3); // fails assertion
+	CPPUNIT_TEST(test_solve_sphere_2); 
+	CPPUNIT_TEST(test_solve_sphere_3); 
     CPPUNIT_TEST_SUITE_END();};
 
 	// ----
