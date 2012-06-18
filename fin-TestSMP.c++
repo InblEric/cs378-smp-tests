@@ -40,7 +40,7 @@ struct TestSMP : CppUnit::TestFixture {
 		women[0] = new int[1];
 		int** men = new int*[1];
 		men[0] = new int[1];
-		// smp read
+		// test smp_read
 		smp_read(r,n,women,men);
 		CPPUNIT_ASSERT(women[0][0] == 1);
 		// clean up
@@ -57,7 +57,7 @@ struct TestSMP : CppUnit::TestFixture {
 		women[0] = new int[1];
 		int** men = new int*[1];
 		men[0] = new int[1];
-		// smp read
+		// test smp_read
 		smp_read(r,n,women,men);
 		CPPUNIT_ASSERT(men[0][0] == 1);
 		// clean up
@@ -76,7 +76,7 @@ struct TestSMP : CppUnit::TestFixture {
 		int** men = new int*[2];
 		men[0] = new int[2];
 		men[1] = new int[2];
-		// smp read
+		// test smp read
 		smp_read(r,n,women,men);
 		CPPUNIT_ASSERT(women[0][0] == 1);
 		CPPUNIT_ASSERT(women[0][1] == 2);
@@ -112,8 +112,8 @@ struct TestSMP : CppUnit::TestFixture {
 		src[0][1] = 2;
 		src[1][0] = 2;
 		src[1][1] = 1;
+		// test smp_invert
 		smp_invert(n,src,dest);
-		// test dest values
 		assert(dest[0][0] == 1);
 		assert(dest[0][1] == 2);
 		assert(dest[1][0] == 2);
@@ -148,8 +148,8 @@ struct TestSMP : CppUnit::TestFixture {
 		src[2][0] = 2;
 		src[2][1] = 1;
 		src[2][2] = 3;
+		// test smp_invert
 		smp_invert(n,src,dest);
-		// test dest values
 		assert(dest[0][0] == 1);
 		assert(dest[0][1] == 2);
 		assert(dest[0][2] == 3);
@@ -191,8 +191,8 @@ struct TestSMP : CppUnit::TestFixture {
 		src[2][0] = 3;
 		src[2][1] = 1;
 		src[2][2] = 2;
+		// test smp_invert
 		smp_invert(n,src,dest);
-		// test dest values
 		assert(dest[0][0] == 1);
 		assert(dest[0][1] == 3);
 		assert(dest[0][2] == 2);
@@ -222,9 +222,12 @@ struct TestSMP : CppUnit::TestFixture {
 		int m_old = 1;
 		int m_new = 2;
 		int * prefs = new int[n];
+		// set some values
 		prefs[0] = 2;
 		prefs[1] = 1;
+		// test smp_prefer_constant
 		assert(smp_prefer_constant(n,m_old,m_new,prefs));
+		// clean up
 		delete [] prefs;
 	}
 
@@ -234,9 +237,12 @@ struct TestSMP : CppUnit::TestFixture {
 		int m_old = 1;
 		int m_new = 2;
 		int * prefs = new int[n];
+		// set some values
 		prefs[0] = 1;
 		prefs[1] = 2;
+		// test smp_prefer_constant
 		assert(!smp_prefer_constant(n,m_old,m_new,prefs));
+		// clean up
 		delete [] prefs;
 	}
 
@@ -246,10 +252,13 @@ struct TestSMP : CppUnit::TestFixture {
 		int m_old = 1;
 		int m_new = 2;
 		int * prefs = new int[n];
+		// set some values
 		prefs[0] = 3;
 		prefs[1] = 1;
 		prefs[2] = 2;
+		// test smp_prefer_constant
 		assert(smp_prefer_constant(n,m_old,m_new,prefs));
+		// clean up
 		delete [] prefs;
 	}
 
@@ -257,26 +266,32 @@ struct TestSMP : CppUnit::TestFixture {
 	// prefer
 	// ------
 	void test_prefer_linear_true () {
+		// set some values
 		int n = 2;
 		int m_old = 1;
 		int m_new = 2;
 		int prefs[2] = {2,1};
+		// test smp_prefer_linear
 		assert(smp_prefer_linear(n,m_old,m_new,prefs));
 	}
 
 	void test_prefer_linear_false () {
+		// set some values
 		int n = 2;
 		int m_old = 1;
 		int m_new = 2;
 		int prefs[2] = {1,2};
+		// test smp_prefer_linear
 		assert(!smp_prefer_linear(n,m_old,m_new,prefs));
 	}
 
 	void test_prefer_linear () {
+		// set some values
 		int n = 3;
 		int m_old = 1;
 		int m_new = 2;
 		int prefs[3] = {3,1,2};
+		// test smp_prefer_linear
 		assert(!smp_prefer_linear(n,m_old,m_new,prefs));
 	}
 
@@ -284,7 +299,7 @@ struct TestSMP : CppUnit::TestFixture {
 	// eval
 	// ----
 	void test_eval_1 () {
-		// initialize buckets
+		// declare var
 		int n = 1;
 		int** women = new int*[1];
 		women[0] = new int[1];
@@ -305,7 +320,7 @@ struct TestSMP : CppUnit::TestFixture {
 	}
 
 	void test_eval_2 () {
-		// initialize buckets
+		// declare var
 		int n = 2;
 		int** women = new int*[2];
 		women[0] = new int[2];
@@ -337,7 +352,7 @@ struct TestSMP : CppUnit::TestFixture {
 	}
 
 	void test_eval_3 () {
-		// initialize buckets
+		// declare var
 		int n = 2;
 		int** women = new int*[2];
 		women[0] = new int[2];
@@ -372,34 +387,46 @@ struct TestSMP : CppUnit::TestFixture {
     // print
     // -----
 	void test_print_1 () {
+		// declare var
 		std::ostringstream w;
 		int n = 1;
 		int* result = new int[1];
+		// set some values
 		result[0] = 1;
+		// test smp_print
 		smp_print(w, n, result);
 		assert(w.str() == "1 1\n");
+		// clean up
 		delete [] result;
 	}	
 
 	void test_print_2 () {
+		// decalare var
 		std::ostringstream w;
 		int n = 2;
 		int* result = new int[2];
+		// set some values
 		result[0] = 1;
 		result[1] = 2;
+		// test smp_print
 		smp_print(w, n, result);
 		assert(w.str() == "1 1\n2 2\n");
+		// clean up
 		delete [] result;
 	}
 
 	void test_print_3 () {
+		// declare var
 		std::ostringstream w;
 		int n = 2;
 		int* result = new int[2];
+		// set some values
 		result[0] = 2;
 		result[1] = 1;
+		// test smp_print
 		smp_print(w, n, result);
 		assert(w.str() == "1 2\n2 1\n");
+		// clean up
 		delete [] result;
 	}
 
